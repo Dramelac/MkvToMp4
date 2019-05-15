@@ -1,0 +1,82 @@
+﻿<Window x:Class="MkvToMp4.AdvanceSetup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:src="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:MkvToMp4"
+        xmlns:conf="clr-namespace:MkvToMp4.Config"
+        mc:Ignorable="d"
+        Title="AdvanceSetup" Height="390" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="25" Margin="10">Advanced Settings</TextBlock>
+
+        <TextBlock Grid.Row="1" FontSize="15" Margin="5,0" VerticalAlignment="Center">Hide banner</TextBlock>
+        <CheckBox Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center" Name="HideBanner_Check" IsChecked="True"></CheckBox>
+
+        <TextBlock Grid.Row="2" FontSize="15" Margin="5,0" VerticalAlignment="Center">Preset</TextBlock>
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center" Name="PresetSelect">
+            <ComboBoxItem IsSelected="True">Default</ComboBoxItem>
+            <ComboBoxItem>UltraFast</ComboBoxItem>
+            <ComboBoxItem>SuperFast</ComboBoxItem>
+            <ComboBoxItem>VeryFast</ComboBoxItem>
+            <ComboBoxItem>Faster</ComboBoxItem>
+            <ComboBoxItem>Fast</ComboBoxItem>
+            <ComboBoxItem>Medium</ComboBoxItem>
+            <ComboBoxItem>Slow</ComboBoxItem>
+            <ComboBoxItem>Slower</ComboBoxItem>
+            <ComboBoxItem>VerySlow</ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock Grid.Row="3" FontSize="15" Margin="5,0" VerticalAlignment="Center">Profile</TextBlock>
+        <ComboBox Grid.Row="3" Grid.Column="1" Margin="5" VerticalAlignment="Center" Name="ProfileSelect">
+            <ComboBoxItem IsSelected="True">Default</ComboBoxItem>
+            <ComboBoxItem>Baseline</ComboBoxItem>
+            <ComboBoxItem>Main</ComboBoxItem>
+            <ComboBoxItem>High</ComboBoxItem>
+            <ComboBoxItem>High10</ComboBoxItem>
+            <ComboBoxItem>High422</ComboBoxItem>
+            <ComboBoxItem>High444</ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock Grid.Row="4" FontSize="15" Margin="5,0" VerticalAlignment="Center">Audio codec</TextBlock>
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="5px" FontSize="15" VerticalAlignment="Center" Name="ACodecSelect"></TextBox>
+
+        <TextBlock Grid.Row="5" FontSize="15" Margin="5,0" VerticalAlignment="Center">Video codec</TextBlock>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="5px" FontSize="15" VerticalAlignment="Center" Name="VCodecSelect"></TextBox>
+
+        <TextBlock Grid.Row="6" FontSize="15" Margin="5,0" VerticalAlignment="Center">Format</TextBlock>
+        <TextBox Grid.Row="6" Grid.Column="1" Margin="5px" FontSize="15" VerticalAlignment="Center" Name="FormatSelect">mp4</TextBox>
+
+        <TextBlock Grid.Row="7" Grid.ColumnSpan="2" FontSize="15" Margin="5,10,0,5" VerticalAlignment="Center" HorizontalAlignment="Center">Custom args (for advanced user only)</TextBlock>
+        <TextBox Grid.Row="8" Grid.ColumnSpan="2" Margin="5px" FontSize="15" VerticalAlignment="Center" Name="CustomInput"></TextBox>
+
+        <Grid Grid.Row="10" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Margin="15" Click="Cancel">Cancel</Button>
+            <Button Grid.Column="1" Margin="15" Click="Confirm">Confirm</Button>
+        </Grid>
+    </Grid>
+</Window>
