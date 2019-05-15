@@ -46,7 +46,7 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="OpenSetting">Advanced settings</Button>
             <Button Grid.Column="1" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="RunHelp">Run Help</Button>
-            <Button Grid.Column="2" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="KillProcess" Name="KillButton" IsEnabled="False">Stop running job (WIP)</Button>
+            <Button Grid.Column="2" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="KillProcess" Name="KillButton" IsEnabled="False">Stop running job</Button>
             <Button Grid.Column="3" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="ClearLogs">Clear output logs</Button>
             <Button Grid.Column="4" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="ViewCommand" Name="ViewCommandButton" IsEnabled="False">View command</Button>
         </Grid>

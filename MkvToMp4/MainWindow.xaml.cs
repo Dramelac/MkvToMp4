@@ -29,6 +29,7 @@ namespace MkvToMp4
 
         private bool IsRunning;
         public delegate void UpdateOutputCallback(string message);
+        public delegate void EndProcessCallback();
 
         private ToolConfig toolConfig;
 
@@ -43,6 +44,7 @@ namespace MkvToMp4
             InputSetuped = false;
             OutputFileName.Text = "output";
             OutputSetuped = true;
+            Proc_running = null;
             if (!File.Exists("ffmpeg.exe"))
             {
                 MessageBox.Show("FFmpeg is not present.\nDownload and place ffmpeg.exe in the same folder of this tool.\n\nhttps://ffmpeg.org/download.html","ERROR");
@@ -113,69 +115,67 @@ namespace MkvToMp4
                 return;
             }
 
-            IsRunning = true;
-            ResultTextBox.Text = "";
+            StartProcess();
             try
             {
+                Proc_running = new Process();
+                Process process = Proc_running;
                 await Task.Run(() =>
                 {
-                    using (Process process = new Process())
+                    process.StartInfo.FileName = "ffmpeg.exe";
+                    if (!String.IsNullOrEmpty(args))
                     {
-                        //KillButton.IsEnabled = true;
-                        process.StartInfo.FileName = "ffmpeg.exe";
-                        if (!String.IsNullOrEmpty(args))
-                        {
-                            process.StartInfo.Arguments = args;
-                        }
-                        else
-                        {
-                            process.StartInfo.Arguments = toolConfig.GenerateArguments();
-                        }
-                        //ResultTextBox.Text = string.Format("Running : ./ffmpeg.exe {0}\nPlease wait ... (Might be long)\n", process.StartInfo.Arguments);
-                        ResultTextBox.Dispatcher.Invoke(
-                            new UpdateOutputCallback(this.UpdateResultText),
-                            string.Format("[INFO] Running : ./ffmpeg.exe {0}\nPlease wait ... (Might be long)", process.StartInfo.Arguments)
-                            );
-
-                        process.StartInfo.UseShellExecute = false;
-                        process.StartInfo.RedirectStandardOutput = true;
-                        process.StartInfo.RedirectStandardError = true;
-                        process.StartInfo.CreateNoWindow = true;
-
-                        process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
-                        {
-                            // Prepend line numbers to each line of the output.
-                            if (!String.IsNullOrEmpty(e.Data))
-                            {
-                                ResultTextBox.Dispatcher.Invoke(
-                                    new UpdateOutputCallback(this.UpdateResultText),
-                                    e.Data);
-                            }
-                        });
-                        process.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
-                        {
-                            // Prepend line numbers to each line of the output.
-                            if (!String.IsNullOrEmpty(e.Data))
-                            {
-                                ResultTextBox.Dispatcher.Invoke(
-                                    new UpdateOutputCallback(this.UpdateResultText),
-                                    e.Data);
-                            }
-                        });
-
-                        process.Start();
-
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-
-                        process.WaitForExit();
+                        process.StartInfo.Arguments = args;
                     }
-                    //Proc_running = null;
-                    //KillButton.IsEnabled = false;
+                    else
+                    {
+                        process.StartInfo.Arguments = toolConfig.GenerateArguments();
+                    }
+                    //ResultTextBox.Text = string.Format("Running : ./ffmpeg.exe {0}\nPlease wait ... (Might be long)\n", process.StartInfo.Arguments);
+                    ResultTextBox.Dispatcher.Invoke(
+                        new UpdateOutputCallback(this.UpdateResultText),
+                        string.Format("[INFO] Running : ./ffmpeg.exe {0}\nPlease wait ... (Might be long)", process.StartInfo.Arguments)
+                        );
+
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.RedirectStandardError = true;
+                    process.StartInfo.CreateNoWindow = true;
+
+                    process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+                    {
+                        // Prepend line numbers to each line of the output.
+                        if (!String.IsNullOrEmpty(e.Data))
+                        {
+                            ResultTextBox.Dispatcher.Invoke(
+                                new UpdateOutputCallback(this.UpdateResultText),
+                                e.Data);
+                        }
+                    });
+                    process.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+                    {
+                        // Prepend line numbers to each line of the output.
+                        if (!String.IsNullOrEmpty(e.Data))
+                        {
+                            ResultTextBox.Dispatcher.Invoke(
+                                new UpdateOutputCallback(this.UpdateResultText),
+                                e.Data);
+                        }
+                    });
+
+                    process.Start();
+
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+
+                    process.WaitForExit();
+
+                    process = null;
+
+                    KillButton.Dispatcher.Invoke(new EndProcessCallback(this.EndProcess));
                     ResultTextBox.Dispatcher.Invoke(
                                     new UpdateOutputCallback(this.UpdateResultText),
                                     "[INFO] Task terminated");
-                    IsRunning = false;
                 });
             }
             catch (Exception ex)
@@ -211,6 +211,26 @@ namespace MkvToMp4
             setting.Show();
         }
 
+        private void StartProcess()
+        {
+            IsRunning = true;
+            ResultTextBox.Text = "";
+            ProgressTextBox.Text = "";
+            KillButton.IsEnabled = true;
+            
+            ConvertButton.IsEnabled = false;
+            ConvertButton.Content = "Running...";
+        }
+
+        private void EndProcess()
+        {
+            IsRunning = false;
+            KillButton.IsEnabled = false;
+            
+            ConvertButton.IsEnabled = true;
+            UpdateStatement();
+        }
+
         private void KillProcess(object sender, RoutedEventArgs e)
         {
             if (Proc_running != null)
@@ -223,6 +243,7 @@ namespace MkvToMp4
         private void ClearLogs(object sender, RoutedEventArgs e)
         {
             ResultTextBox.Text = "";
+            ProgressTextBox.Text = "";
         }
 
         private void ViewCommand(object sender, RoutedEventArgs e)
