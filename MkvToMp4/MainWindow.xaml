@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MkvToMp4"
         mc:Ignorable="d"
-        Title="MkvToMp4" Height="500" Width="850">
-    <Grid>
+        Title="MkvToMp4" Height="500" Width="850" MinHeight="400" MinWidth="710">
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -23,7 +23,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Margin="10,0,0,0" FontSize="15px" VerticalAlignment="Center">Select MKV input file :</TextBlock>
+            <TextBlock Grid.Column="0" Margin="5,0,0,0" FontSize="15px" VerticalAlignment="Center">Select MKV input file :</TextBlock>
             <Button Grid.Column="1" Margin="5" Padding="15,2" Click="Select_inputfile_click" HorizontalAlignment="Left" VerticalAlignment="Top">Select file</Button>
             <TextBlock Grid.Column="2" Name="InputSelectFile" HorizontalAlignment="Left" VerticalAlignment="Center" >Please select input file</TextBlock>
 
@@ -33,7 +33,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" FontSize="15px" Margin="10" VerticalAlignment="Center">Enter output file name :</TextBlock>
+            <TextBlock Grid.Column="0" FontSize="15px" Margin="5" VerticalAlignment="Center">Enter output file name :</TextBlock>
             <TextBox Grid.Column="1" Width="250px" Name="OutputFileName" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="UpdateOutput"></TextBox>
         </Grid>
         <Grid Grid.Row="3">
@@ -44,7 +44,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="OpenSetting">Advanced settings</Button>
+            <Button Grid.Column="0" FontSize="15px" Margin="5,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="OpenSetting">Advanced settings</Button>
             <Button Grid.Column="1" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="RunHelp">Run Help</Button>
             <Button Grid.Column="2" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="KillProcess" Name="KillButton" IsEnabled="False">Stop running job</Button>
             <Button Grid.Column="3" FontSize="15px" Margin="10,0,0,0" Padding="5,2" VerticalAlignment="Center" Click="ClearLogs">Clear output logs</Button>
@@ -54,7 +54,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition/>
+                <RowDefinition Height="1*"/>
                 <RowDefinition Height="30px"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -64,18 +64,19 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Row="0" Grid.Column="1" Margin="10,15,10,0" Padding="5" FontSize="20px" VerticalAlignment="Center" Name="ConvertButton" Click="Convert" IsEnabled="False">Convert to MP4</Button>
-            <TextBlock Grid.Row="1" FontSize="15px" Margin="10,0" VerticalAlignment="Center">Output :</TextBlock>
+            <TextBlock Grid.Row="1" FontSize="15px" Margin="5,0" VerticalAlignment="Center">Output :</TextBlock>
             
-            <ScrollViewer Grid.Row="2" Grid.ColumnSpan="3" Name="ResultScroll" Margin="10" Background="LightGray" Height="Auto" VerticalAlignment="Stretch">
+            <ScrollViewer Grid.Row="2" Grid.ColumnSpan="3" Name="ResultScroll" Margin="5" Background="LightGray" Height="Auto" VerticalAlignment="Stretch">
                 <TextBox Name="ResultTextBox" FontSize="15px" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0" Text="{Binding Text, Mode=OneWay}"></TextBox>
             </ScrollViewer>
-            <TextBlock Grid.Row="3" Grid.ColumnSpan="3" Margin="10,0" Padding="5" VerticalAlignment="Center" Name="ProgressTextBox" FontSize="15px" TextWrapping="Wrap" Background="LightGray"></TextBlock>
+            <TextBlock Grid.Row="3" Grid.ColumnSpan="3" Margin="5,0" Padding="5" VerticalAlignment="Center" Name="ProgressTextBox" FontSize="15px" TextWrapping="Wrap" Background="LightGray"></TextBlock>
         </Grid>
         <Grid Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Padding="3" FontSize="15px" VerticalAlignment="Center">Version 1.1</TextBlock>
             <TextBlock Grid.Column="1" Padding="3" FontSize="15px" VerticalAlignment="Center">By Dramelac</TextBlock>
 
         </Grid>

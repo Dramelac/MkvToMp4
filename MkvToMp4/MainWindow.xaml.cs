@@ -47,7 +47,7 @@ namespace MkvToMp4
             Proc_running = null;
             if (!File.Exists("ffmpeg.exe"))
             {
-                MessageBox.Show("FFmpeg is not present.\nDownload and place ffmpeg.exe in the same folder of this tool.\n\nhttps://ffmpeg.org/download.html","ERROR");
+                MessageBox.Show("FFmpeg is not present.\nDownload and place ffmpeg.exe in the same folder of this tool.\n\nhttps://ffmpeg.org/download.html","FFmpeg is missing", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown(1);
             }
         }
@@ -55,23 +55,25 @@ namespace MkvToMp4
         private void Select_inputfile_click(object sender, RoutedEventArgs e)
         {
             // Create OpenFileDialog
-            Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
-            openFileDlg.Multiselect = false;
-            openFileDlg.DefaultExt = ".mkv";
-            openFileDlg.Filter = "Video MKV (*.mkv)|*.mkv";
+            Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Multiselect = false,
+                DefaultExt = ".mkv",
+                Filter = "Video MKV (*.mkv)|*.mkv"
+            };
 
             // Launch OpenFileDialog by calling ShowDialog method
             Nullable<bool> result = openFileDlg.ShowDialog();
 
-            if (result == true)
+            if (result.HasValue && result == true)
             {
                 this.toolConfig.InputFile = openFileDlg.FileName;
-                InputSelectFile.Text = openFileDlg.FileName;
+                InputSelectFile.Text = openFileDlg.SafeFileName;
                 InputSetuped = true;
             }
             else
             {
-                InputSelectFile.Text = "Please select correct file";
+                InputSelectFile.Text = "Please select correct input file";
                 InputSetuped = false;
             }
             UpdateStatement();
@@ -104,6 +106,9 @@ namespace MkvToMp4
             if (InputSetuped && OutputSetuped)
             {
                 ExecTool();
+            } else
+            {
+                MessageBox.Show("Please complete the required fields", "Missing information", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -111,7 +116,7 @@ namespace MkvToMp4
         {
             if (IsRunning)
             {
-                MessageBox.Show("A task is already in progress.","Operation not possible");
+                MessageBox.Show("A task is already in progress.", "Operation not possible", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
 
@@ -131,20 +136,19 @@ namespace MkvToMp4
                     {
                         process.StartInfo.Arguments = toolConfig.GenerateArguments();
                     }
-                    //ResultTextBox.Text = string.Format("Running : ./ffmpeg.exe {0}\nPlease wait ... (Might be long)\n", process.StartInfo.Arguments);
                     ResultTextBox.Dispatcher.Invoke(
                         new UpdateOutputCallback(this.UpdateResultText),
-                        string.Format("[INFO] Running : ./ffmpeg.exe {0}\nPlease wait ... (Might be long)", process.StartInfo.Arguments)
+                        string.Format("[INFO] Running : ./ffmpeg.exe {0}", process.StartInfo.Arguments)
                         );
 
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
                     process.StartInfo.RedirectStandardError = true;
+                    process.StartInfo.RedirectStandardInput = true;
                     process.StartInfo.CreateNoWindow = true;
 
                     process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
                     {
-                        // Prepend line numbers to each line of the output.
                         if (!String.IsNullOrEmpty(e.Data))
                         {
                             ResultTextBox.Dispatcher.Invoke(
@@ -154,7 +158,6 @@ namespace MkvToMp4
                     });
                     process.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
                     {
-                        // Prepend line numbers to each line of the output.
                         if (!String.IsNullOrEmpty(e.Data))
                         {
                             ResultTextBox.Dispatcher.Invoke(
@@ -180,14 +183,14 @@ namespace MkvToMp4
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message,"Execution exception");
+                MessageBox.Show(ex.Message,"Execution exception", MessageBoxButton.OK,MessageBoxImage.Error);
                 IsRunning = false;
             }
         }
 
         private void UpdateResultText(string msg)
         {
-            Regex regex = new Regex(@"^frame=[\s\d]*fps=[\s\d.]*q=[\s\d.]*size=[\s\d]*[\w]+[\s]+time=[\d:.]+[\s]+bitrate=[\s]*[\d.]+[\w\/]+[\s]+speed=[\s]*[\d.x]+[\s]+$");
+            Regex regex = new Regex(@"^frame=[\s\d]*fps=");
             if (regex.Match(msg).Success)
             {
                 ProgressTextBox.Text = msg;
@@ -235,8 +238,10 @@ namespace MkvToMp4
         {
             if (Proc_running != null)
             {
-                Proc_running.Kill();
-                KillButton.IsEnabled = false;
+                Proc_running.StandardInput.WriteLine("q");
+            } else
+            {
+                MessageBox.Show("No tasks in progress", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -248,7 +253,7 @@ namespace MkvToMp4
 
         private void ViewCommand(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(string.Format("./ffmpeg.exe {0}", toolConfig.GenerateArguments()), "Prepared statement");
+            MessageBox.Show(string.Format("./ffmpeg.exe {0}", toolConfig.GenerateArguments()), "Prepared statement", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

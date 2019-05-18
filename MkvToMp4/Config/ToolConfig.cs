@@ -24,9 +24,9 @@ namespace MkvToMp4.Config
             HideBanner = true;
             Format = "mp4";
             Preset = "Default";
-            VCodec = null;
+            VCodec = "copy";
             Profile = "Default";
-            ACodec = null;
+            ACodec = "copy";
             AdvanceArgs = "";
         }
 
